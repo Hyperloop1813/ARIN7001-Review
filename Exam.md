@@ -1,7 +1,9 @@
-## ARIN7001 Revision - summerized by hyperloop
+## ARIN7001 Revision - summarized by hyperloop
 
 ### Section 1 Calculus
+
 ### 2022 Final
+
 ![](./2022/1.png)
 ![](./2022/2.png)
 ![](./2022/3.png)
@@ -13,6 +15,7 @@
 ---
 
 ### 2023 Final
+
 ![](./2023/1.png)
 ![1764848004388](image/Exam/1764848004388.png)
 ![1764848037350](image/Exam/1764848037350.png)
@@ -53,8 +56,8 @@
 
 ---
 
-
 ### 2024 Final
+
 ![](./2024/1.png)
 
 ![](./2024/2.png)
@@ -64,13 +67,16 @@
 ![](./2024/6.png)
 
 ### Section 2 Statistic
+
 ### 2022 Final
+
 ![](./2022/8.png)
 ![](./2022/9.png)
 ![](./2022/10.png)
 ![](./2022/11.png)
 
 ### 2023 Final
+
 ![](./2023/7.png)
 
 ---
@@ -90,6 +96,7 @@
 ---
 
 ### 2024 Final
+
 ![](./2024/7.png)
 ![1764832309523](image/Exam/1764832309523.png)
 ![1764832319084](image/Exam/1764832319084.png)

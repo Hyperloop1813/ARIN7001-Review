@@ -1,4 +1,4 @@
-## ARIN7001 Key Notes - summerized by hyperloop
+## ARIN7001 Key Notes - summarized by hyperloop
 
 ## 1 Adv Math & Calculus Section
 高等数学部分每年大约有6-7道题，主要考察积分方面知识，还会有一些关于可微性质、复合函数求导、约束优化、导数梯度等知识，这一部分知识点最杂乱，有些题还是会固定出现；
