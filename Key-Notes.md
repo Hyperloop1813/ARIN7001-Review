@@ -293,4 +293,279 @@ D = f_{xx}f_{yy} - f_{xy}^2
 
 ## 3 Data Structure & Algorithm Section
 
-### Updating...
+### Time Complexity
+![1764936948993](image/CS-Review/1764936948993.png)
+![1764936880690](image/CS-Review/1764936880690.png)
+
+---
+
+## 常见数据结构：操作时间复杂度速查表（Big-O）
+
+> 说明  
+> - n：元素个数；h：树高；α(n)：反阿克曼函数（几乎可视为常数）  
+> - “平均/均摊”常见于哈希、动态数组扩容等场景  
+> - 不同实现会有常数差异，但数量级规律基本一致
+
+---
+
+### 1) 数组 / 动态数组（Array / Dynamic Array, 如 Python list 的“动态数组”部分）
+
+| 操作 | 访问/修改 by index | 查找(无序) | 查找(有序, 二分) | 末尾追加 append | 末尾删除 pop | 头部/中间插入 | 头部/中间删除 | 扩容 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| 时间复杂度 | O(1) | O(n) | O(log n) | 均摊 O(1)（最坏 O(n)） | O(1) | O(n) | O(n) | 最坏 O(n) |
+
+---
+
+### 2) 链表（Linked List）
+
+| 操作 | 访问第 k 个 | 查找 | 已知结点插入/删除 | 头插/头删 | 尾插/尾删（无尾指针） | 尾插/尾删（有尾指针，单链表） |
+|---|---:|---:|---:|---:|---:|---:|
+| 单链表 | O(n) | O(n) | 插入 O(1)，删除通常 O(1)\* | O(1) | O(n) | 尾插 O(1)，尾删 O(n) |
+| 双链表 | O(n) | O(n) | 插入/删除 O(1) | O(1) | O(1)\*\* | O(1)\*\* |
+
+\* 单链表删除“已知结点”通常还需要其前驱；若已给前驱则 O(1)，否则要找前驱 O(n)。  
+\*\* 双链表若维护 tail 指针，尾插/尾删可 O(1)。
+
+---
+
+### 3) 栈 / 队列 / 双端队列（Stack / Queue / Deque）
+
+| 结构 | 主要操作 | 时间复杂度 |
+|---|---|---:|
+| 栈 Stack | push / pop / top | O(1) |
+| 队列 Queue | enqueue / dequeue / front | O(1) |
+| 双端队列 Deque | push_front / push_back / pop_front / pop_back | O(1) |
+
+> 注：若用“普通动态数组”硬做队列的 `pop(0)` 会变成 O(n)。
+
+---
+
+### 4) 哈希表（Hash Table / Dict / Map）
+
+| 操作 | 插入 | 删除 | 查找 | 遍历全部 |
+|---|---:|---:|---:|---:|
+| 平均/均摊 | O(1) | O(1) | O(1) | O(n) |
+| 最坏 | O(n) | O(n) | O(n) | O(n) |
+
+> 最坏通常来自哈希冲突极端或被攻击输入；工程上会用随机化/扩容/更好的哈希策略缓解。
+
+---
+
+### 5) 二叉搜索树 BST / 平衡树 AVL/红黑树（Balanced BST）
+
+| 结构 | 查找 | 插入 | 删除 | 最坏树高 |
+|---|---:|---:|---:|---:|
+| 普通 BST（不平衡） | O(h)（最坏 O(n)） | O(h)（最坏 O(n)） | O(h)（最坏 O(n)） | h 最坏 = n |
+| 平衡 BST（AVL/红黑树） | O(log n) | O(log n) | O(log n) | h = O(log n) |
+
+---
+
+### 6) 二叉堆（Binary Heap：最小堆/最大堆）
+
+| 操作 | 取堆顶 peek | 插入 push | 删除堆顶 pop | decrease/increase-key | 建堆 build-heap | 堆排序 heapsort |
+|---|---:|---:|---:|---:|---:|---:|
+| 时间复杂度 | O(1) | O(log n) | O(log n) | O(log n) | O(n) | O(n log n) |
+
+---
+
+### 7) 排序算法（常见对比）
+
+| 算法 | 平均 | 最坏 | 最好 | 额外空间 | 稳定性 |
+|---|---:|---:|---:|---:|---|
+| 快排 QuickSort | O(n log n) | O(n^2) | O(n log n) | 递归栈 O(log n)~O(n) | 通常不稳定 |
+| 归并 MergeSort | O(n log n) | O(n log n) | O(n log n) | O(n) | 稳定 |
+| 堆排 HeapSort | O(n log n) | O(n log n) | O(n log n) | O(1) | 不稳定 |
+| 插入 Insertion | O(n^2) | O(n^2) | O(n) | O(1) | 稳定 |
+| 选择 Selection | O(n^2) | O(n^2) | O(n^2) | O(1) | 不稳定(常见实现) |
+| 冒泡 Bubble | O(n^2) | O(n^2) | O(n)\* | O(1) | 稳定 |
+
+\* 带“提前终止”优化时最好 O(n)。
+
+---
+
+## 二叉堆（最大堆）的基本操作
+
+> 记号：堆大小为 `n`，结点索引从 0 开始  
+> `parent(i)=(i-1)//2`，`left(i)=2i+1`，`right(i)=2i+2`  
+> 堆高度 `h = ⌊log2 n⌋`
+
+
+
+### 0. 堆的常见基本操作（Max-Heap）
+
+### A) 取最大值 `HEAP-MAXIMUM`
+- **步骤**：直接返回 `A[0]`
+- **时间复杂度**：`O(1)`
+
+### B) 插入 `MAX-HEAP-INSERT(x)`（上滤 / sift-up）
+- **步骤**
+  1. 把 `x` 追加到数组末尾（堆尾）
+  2. 令 `i = last_index`
+  3. while `i>0` 且 `A[parent(i)] < A[i]`：交换 `A[i]` 与 `A[parent(i)]`，令 `i = parent(i)`
+- **时间复杂度**：`O(log n)`（最多上滤一条根路径）
+
+### C) 删除最大值 `HEAP-EXTRACT-MAX`（下滤 / sift-down）
+- **步骤**
+  1. 保存 `max = A[0]`
+  2. 用最后一个元素覆盖根：`A[0] = A[n-1]`，堆大小 `n--`
+  3. 对根执行 `MAX-HEAPIFY(0)`
+  4. 返回 `max`
+- **时间复杂度**：`O(log n)`
+
+### D) 增大某个键值 `HEAP-INCREASE-KEY(i, newKey)`
+- **前提**：`newKey >= A[i]`
+- **步骤**：令 `A[i]=newKey`，然后像插入一样不断与父结点交换（上滤）
+- **时间复杂度**：`O(log n)`
+
+---
+
+### 1. MAX-HEAPIFY（维护最大堆性质，向下调整）
+
+### 作用
+当某个结点 `i` 可能比子结点小（常见于“根被替换”“局部破坏”），`MAX-HEAPIFY(i)` 通过**下滤**恢复以 `i` 为根的子树的最大堆性质。  
+**关键前提**：`i` 的左右子树（如果存在）本身已经是最大堆。
+
+### 操作步骤（递归/迭代都行）
+1. `l = left(i)`, `r = right(i)`
+2. 在 `i,l,r` 中找值最大的结点 `largest`
+3. 如果 `largest != i`：
+   - 交换 `A[i]` 与 `A[largest]`
+   - 令 `i = largest`，继续对新的 `i` 做 `MAX-HEAPIFY`
+
+### 时间复杂度
+- 只会沿高度向下走最多 `h` 层  
+- **`O(log n)`**
+
+---
+
+### 2. BUILD-MAX-HEAP（把无序数组建成最大堆）
+
+### 核心思想
+从**最后一个非叶子结点**开始，自底向上对每个结点做 `MAX-HEAPIFY`。  
+因为叶子本身就是堆（无需处理），越靠下的结点下滤成本越低。
+
+### 操作步骤
+1. 堆大小 `heap_size = n`
+2. 对 `i = ⌊n/2⌋ - 1, ⌊n/2⌋ - 2, ..., 0`：
+   - 调用 `MAX-HEAPIFY(i)`
+
+### 时间复杂度（重点！）
+- 不是 `O(n log n)`，而是 **`O(n)`**  
+- 直觉：大量结点在底层，`heapify` 走不了几层；只有少量上层结点才可能走很深。
+
+---
+
+### 3. HEAPSORT（堆排序）
+
+### 思想
+先建最大堆（最大值在根），反复把根（最大值）交换到数组末尾，并缩小堆，再对根 `heapify`。
+
+### 操作步骤
+1. `BUILD-MAX-HEAP(A)`
+2. for `i = n-1` down to `1`：
+   - 交换 `A[0]` 与 `A[i]`（把当前最大值放到最终位置）
+   - `heap_size--`（末尾已排好，不再属于堆）
+   - `MAX-HEAPIFY(0)`（恢复最大堆）
+
+### 时间复杂度
+- 建堆：`O(n)`
+- 循环执行 `n-1` 次，每次 `heapify`：`O(log n)`
+- 总计：**`O(n log n)`**
+
+### 额外性质
+- **原地排序**：额外空间 `O(1)`（不算递归栈）
+- **非稳定**：相等元素相对次序可能改变
+
+
+---
+
+## 二叉树：中序遍历(inorder)导航 + 插入/删除相关函数总结（指针实现）
+
+> 默认结点结构：每个结点有 `left / right / parent` 指针  
+> 中序顺序：**Left subtree → Node → Right subtree**
+
+---
+
+### 1) 中序遍历的“导航”函数（Navigation）
+
+#### 1.1 `subtree_first(X)`：找以 X 为根的子树的**第一个**（最左）
+- 规则：从 `X` 出发，一直走 `left`，直到 `left == None`
+- 返回：该最左结点
+- 复杂度：O(h)（h 为树高）
+
+#### 1.2 `subtree_last(X)`：找以 X 为根的子树的**最后一个**（最右）
+- 规则：从 `X` 出发，一直走 `right`，直到 `right == None`
+- 返回：该最右结点
+- 复杂度：O(h)
+
+#### 1.3 `successor(X)`：找 X 的**中序后继**（下一个）
+- 情况 A：`X.right != None`
+  - 后继 = `subtree_first(X.right)`（右子树最左）
+- 情况 B：`X.right == None`
+  - 往上爬：当 `X` 是其父结点的 **right child** 时继续上爬
+  - 第一次遇到 `X` 是父结点的 **left child**，那个父结点就是后继
+  - 如果爬到根都没找到：后继不存在（X 已是最后一个）
+- 复杂度：O(h)
+
+#### 1.4 `predecessor(X)`：找 X 的**中序前驱**（上一个）
+- 完全对称：
+  - 若 `X.left != None`：前驱 = `subtree_last(X.left)`
+  - 否则往上爬：当 `X` 是父结点的 **left child** 时继续上爬；第一次遇到 `X` 是 **right child** 的父结点就是前驱
+- 复杂度：O(h)
+
+---
+
+### 2) 插入函数：`insert_after(X, Y)`（把新结点 Y 插到 X 的“中序后面”）
+
+> 这类插入是基于“中序顺序=序列”的树结构（Sequence Tree）  
+> **注意：它不按 key 比较，因此一般不保证 BST 的有序性。**
+
+前提：Y 是“新结点”，通常 `Y.left = Y.right = None`
+
+#### 2.1 若 `X.right == None`
+- 直接挂：`X.right = Y`
+- `Y.parent = X`
+- 为什么正确：中序访问 X 后就会进入 X 的右子树，Y 作为右孩子会立刻成为下一个
+
+#### 2.2 若 `X.right != None`
+- 令 `Z = subtree_first(X.right)`（X 右子树最左结点）
+- 因为 Z 是最左，所以 `Z.left == None`
+- 插入：`Z.left = Y`，`Y.parent = Z`
+- 为什么正确：中序访问 X 后进入右子树，最先到达的就是右子树最左 Z；把 Y 放在 Z 的左边，Y 会比 Z 更早被访问，从而紧跟在 X 后面
+
+复杂度：O(h)（主要花在找 `subtree_first`）
+
+---
+
+### 3) 删除函数：`delete(X)`（保持中序序列不乱）
+
+常用辅助：`transplant(U, V)`  
+- 含义：用子树 V 替换子树 U 的位置（更新 `parent` 指针）
+- 用途：把“某结点从树上摘掉，并把它的孩子接上去”
+
+#### 3.1 X 没有孩子（叶子）
+- 直接把父结点指向 X 的那条边置空
+- 复杂度：O(1)
+
+#### 3.2 X 只有一个孩子
+- 用它的唯一孩子替换它：`transplant(X, X.left)` 或 `transplant(X, X.right)`
+- 复杂度：O(1)
+
+#### 3.3 X 有两个孩子（最经典）
+做法：用 **X 的中序后继 S** 来替换 X（S 一定在 X 的右子树，且 S 没有左孩子）
+- `S = successor(X)`（等价于 `subtree_first(X.right)`）
+- 分两种：
+
+**(a) S 就是 X 的右孩子**
+- 直接 `transplant(X, S)`
+- 再令 `S.left = X.left`，并更新 `X.left.parent = S`
+
+**(b) S 不直接是 X.right（S 在右子树更深处）**
+1. `transplant(S, S.right)`：先把 S 从原位置拿走（S 没左孩子，所以只可能带一个右孩子）
+2. 把 X 的右子树接到 S：`S.right = X.right`，并更新 `S.right.parent = S`
+3. `transplant(X, S)`：用 S 替换 X
+4. 把 X 的左子树接到 S：`S.left = X.left`，并更新 `S.left.parent = S`
+
+复杂度：O(h)（找后继 + 若干次 transplant）
+
+
