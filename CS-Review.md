@@ -124,6 +124,20 @@
 ![1765010250565](image/CS-Review/1765010250565.png)
 ![1765010258867](image/CS-Review/1765010258867.png)
 
+```
+def selectionsort(arr):
+    n = len(arr)
+    for i in range(n - 1):
+        min_index = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_index]:
+                min_index = j
+        if min_index != i:
+            arr[i], arr[min_index] = arr[min_index], arr[i]
+    return arr
+
+```
+
 ---
 
 ## 3.2 Divide and Conquer - Peak Finder
@@ -134,9 +148,66 @@
 
 ---
 
-## 3.2 Divide and Conquer - Merge Sort
+## 3.3 Divide and Conquer - Merge Sort
 ![1765010363853](image/CS-Review/1765010363853.png)
 ![1765010911292](image/CS-Review/1765010911292.png)
+
+```
+def mergesort(arr):
+    if len(arr) <= 1:
+        return arr
+
+    mid = len(arr) // 2
+    left = mergesort(arr[:mid])
+    right = mergesort(arr[mid:])
+    return merge(left, right)
+
+def merge(left, right):
+    i = j = 0
+    result = []
+
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+```
+
+---
+
+## 3.4 Quick Sort
+非原地版
+```
+def quicksort(arr):
+    # Extra-space (3-way partition) quicksort: returns a NEW sorted list
+    if len(arr) <= 1:
+        return arr
+
+    pivot = arr[len(arr) // 2]   # you can also use arr[0] or random choice
+    less, equal, greater = [], [], []
+
+    for x in arr:
+        if x < pivot:
+            less.append(x)
+        elif x == pivot:
+            equal.append(x)
+        else:
+            greater.append(x)
+
+    return quicksort(less) + equal + quicksort(greater)
+```
+
+| 快排版本 | 核心做法 | 平均时间 | 最坏时间 | 平均峰值额外空间（不含输入） | 最坏峰值额外空间（不含输入） | 递归栈空间（平均/最坏） | 是否原地 |
+|---|---|---|---|---|---|---|---|
+| 非原地快排（less/equal/greater） | 扫描分到新列表 → 递归 → 拼接返回 | O(n log n) | O(n^2) | O(n) | O(n^2) | O(log n) / O(n) | 否 |
+| 原地快排（Lomuto） | 原地 partition 交换 → 递归左右区间 | O(n log n) | O(n^2) | O(1) | O(1) | O(log n) / O(n) | 是 |
+
 
 
 ---
@@ -219,6 +290,7 @@
 - 只会沿高度向下走最多 `h` 层  
 - **`O(log n)`**
 
+![1765181021203](image/CS-Review/1765181021203.png)
 ---
 
 ### 2. BUILD-MAX-HEAP（把无序数组建成最大堆）
@@ -235,6 +307,8 @@
 ### 时间复杂度（重点！）
 - 不是 `O(n log n)`，而是 **`O(n)`**  
 - 直觉：大量结点在底层，`heapify` 走不了几层；只有少量上层结点才可能走很深。
+
+![1765181047201](image/CS-Review/1765181047201.png)
 
 ---
 
@@ -258,6 +332,8 @@
 ### 额外性质
 - **原地排序**：额外空间 `O(1)`（不算递归栈）
 - **非稳定**：相等元素相对次序可能改变
+
+![1765181142896](image/CS-Review/1765181142896.png)
 
 ---
 
@@ -360,6 +436,59 @@
 
 ### 小提醒：结构不变，访问位置变
 三种遍历的“走树路径”很像，真正的差异只在于：**根节点是在进入子树前访问、两棵子树之间访问，还是两棵子树之后访问。**
+
+---
+```
+class TreeNode:
+    def __init__(self, key, parent=None):
+        self.key = key
+        self.left = None
+        self.right = None
+        self.parent = parent
+
+def build_tree_and_traverse(keys: list) -> tuple:
+    root = None
+
+    def insert(node, key, parent=None):
+        if node is None:
+            return TreeNode(key, parent)
+        if key < node.key:
+            node.left = insert(node.left, key, node)
+        else:
+            node.right = insert(node.right, key, node)
+        return node
+
+    for key in keys:
+        root = insert(root, key)
+    
+    preorder_list = []
+    inorder_list = []
+    postorder_list = []
+
+    def preorder_traversal(node):
+        if node is not None:
+            preorder_list.append(node.key)
+            preorder_traversal(node.left)
+            preorder_traversal(node.right)
+    
+    def inorder_traversal(node):
+        if node is not None:
+            inorder_traversal(node.left)
+            inorder_list.append(node.key)
+            inorder_traversal(node.right)
+    
+    def postorder_traversal(node):
+        if node is not None:
+            postorder_traversal(node.left)
+            postorder_traversal(node.right)
+            postorder_list.append(node.key)
+
+    preorder_traversal(root)
+    inorder_traversal(root)
+    postorder_traversal(root)
+
+    return (preorder_list, inorder_list, postorder_list)
+```
 
 
 ---
